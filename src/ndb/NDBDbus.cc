@@ -11,6 +11,7 @@
 #include "../../NickelMenu/src/util.h"
 #include "util.h"
 #include "NDBDbus.h"
+#include "SageButtonMonitor.h"
 #include "../interface/ndb_adapter.h"
 
 /*!
@@ -39,6 +40,12 @@ namespace NDB {
  */
 NDBDbus::NDBDbus(QObject* parent) : QObject(parent), QDBusContext() {
     new NDBAdapter(this);
+    buttonMonitor = new SageButtonMonitor(this);
+    if (!buttonMonitor->start()) {
+        nh_log("SageButtonMonitor: no evdev devices could be observed; Qt event diagnostics remain active");
+    }
+    QObject::connect(this, &NDBDbus::ndbViewChanged,
+        buttonMonitor, &SageButtonMonitor::recordViewChanged);
     initSucceeded = true;
     nh_log("NickelDBus: registering object %s", NDB_DBUS_OBJECT_PATH);
     if (!conn.registerObject(NDB_DBUS_OBJECT_PATH, this)) {
@@ -184,6 +191,18 @@ void NDBDbus::connectSignals() {
  */
 QString NDBDbus::ndbVersion() {
     return QStringLiteral(NH_VERSION);
+}
+
+QString NDBDbus::sbfDiagnostics() {
+    return buttonMonitor
+        ? buttonMonitor->diagnostics()
+        : QStringLiteral("SageButtonsFix monitor unavailable\n");
+}
+
+void NDBDbus::sbfClearDiagnostics() {
+    if (buttonMonitor) {
+        buttonMonitor->clearDiagnostics();
+    }
 }
 
 /*!
@@ -1025,6 +1044,10 @@ void NDBDbus::rvConnectSignals(QWidget* rv) {
     // Just connecting pageChanged(int) for now. Others may or may not 
     // come in the future.
     QObject::connect(rv, SIGNAL(pageChanged(int)), this, SIGNAL(rvPageChanged(int)), Qt::UniqueConnection);
+    if (buttonMonitor) {
+        QObject::connect(rv, SIGNAL(pageChanged(int)), buttonMonitor,
+            SLOT(recordPageChanged(int)), Qt::UniqueConnection);
+    }
 }
 
 /*!

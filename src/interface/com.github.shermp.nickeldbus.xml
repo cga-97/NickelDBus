@@ -66,6 +66,10 @@
     <method name="ndbFirmwareVersion">
       <arg type="s" direction="out"/>
     </method>
+    <method name="sbfDiagnostics">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="sbfClearDiagnostics"/>
     <method name="ndbSignalConnected">
       <arg type="b" direction="out"/>
       <arg name="signalName" type="s" direction="in"/>

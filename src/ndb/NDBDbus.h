@@ -33,6 +33,8 @@ typedef QObject WirelessWatchdog;
 
 namespace NDB {
 
+class SageButtonMonitor;
+
 class NDBDbus : public QObject, protected QDBusContext {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", NDB_DBUS_IFACE_NAME)
@@ -77,6 +79,8 @@ class NDBDbus : public QObject, protected QDBusContext {
         QString ndbNickelWidgets();
         QString ndbCurrentView();
         QString ndbFirmwareVersion();
+        QString sbfDiagnostics();
+        void sbfClearDiagnostics();
         // misc
         bool ndbSignalConnected(QString const& signalName);
         void mwcToast(int toastDuration, QString const& msgMain, QString const& msgSub = QStringLiteral(""));
@@ -140,6 +144,7 @@ class NDBDbus : public QObject, protected QDBusContext {
         QStackedWidget *stackedWidget = nullptr;
         QString fwVersion;
         NDBCfmDlg *cfmDlg;
+        SageButtonMonitor *buttonMonitor = nullptr;
         //NDBN3Dlg *n3Dlg;
         struct {
             bool *(*PlugManager__gadgetMode)(PlugManager*);

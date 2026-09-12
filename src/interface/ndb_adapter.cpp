@@ -329,6 +329,20 @@ void NDBAdapter::pwrSleep()
     QMetaObject::invokeMethod(parent(), "pwrSleep");
 }
 
+void NDBAdapter::sbfClearDiagnostics()
+{
+    // handle method call com.github.shermp.nickeldbus.sbfClearDiagnostics
+    QMetaObject::invokeMethod(parent(), "sbfClearDiagnostics");
+}
+
+QString NDBAdapter::sbfDiagnostics()
+{
+    // handle method call com.github.shermp.nickeldbus.sbfDiagnostics
+    QString out0;
+    QMetaObject::invokeMethod(parent(), "sbfDiagnostics", Q_RETURN_ARG(QString, out0));
+    return out0;
+}
+
 void NDBAdapter::wfmConnectWireless()
 {
     // handle method call com.github.shermp.nickeldbus.wfmConnectWireless
@@ -346,4 +360,3 @@ void NDBAdapter::wfmSetAirplaneMode(const QString &action)
     // handle method call com.github.shermp.nickeldbus.wfmSetAirplaneMode
     QMetaObject::invokeMethod(parent(), "wfmSetAirplaneMode", Q_ARG(QString, action));
 }
-

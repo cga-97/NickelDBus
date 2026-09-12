@@ -38,3 +38,26 @@ A KoboRoot.tgz that can be installed on your Kobo can be generated with `make ko
 To start developing with NickelDBus, you will first need to generate the dbus adapter and proxy headers. You can run `make interface` to do this. Alternatively, `make` will also do this as part of the compile process. Note, this requires the `qdbuscpp2xml` and `qdbusxml2cpp` programs from Qt, which are included with NickelTC.
 
 To compile `qndb`, run `make cli`. Note, you will need to run this before `make koboroot`.
+
+## Kobo Sage button diagnostics
+
+This fork contains a passive diagnostic monitor for the Kobo Sage page-turn
+button issue. It records a bounded in-memory history of Linux evdev key events,
+Qt key events received by Nickel, ReadingView page changes, and view changes.
+It does not inject input, change power management, or write continuously to
+`/mnt/onboard`. The current validation target is Kobo Sage firmware 4.38.23552.
+
+The monitor keeps read-only file descriptors open for the input devices. That
+is required to observe evdev, but it may also change device power behaviour. If
+the idle-button failure disappears with this build, treat that result as useful
+evidence rather than proof that the underlying fault is fixed.
+
+After reproducing the issue, use the NickelMenu item **Guardar diagnostico de
+botones**. It writes the current snapshot to
+`/mnt/onboard/sage-buttons-diagnostic.txt`. Saving is explicit so the monitor
+does not add storage IO while reading or during USB mass-storage sessions.
+
+The diagnostic build is intentionally not a button workaround yet. Its purpose
+is to determine whether the first button press after idle is lost in the Linux
+input layer, between evdev and Qt, or inside Nickel before selecting the minimum
+safe fix.

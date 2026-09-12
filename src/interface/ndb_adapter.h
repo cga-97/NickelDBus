@@ -86,6 +86,10 @@ class NDBAdapter: public QDBusAbstractAdaptor
 "    <method name=\"ndbFirmwareVersion\">\n"
 "      <arg direction=\"out\" type=\"s\"/>\n"
 "    </method>\n"
+"    <method name=\"sbfDiagnostics\">\n"
+"      <arg direction=\"out\" type=\"s\"/>\n"
+"    </method>\n"
+"    <method name=\"sbfClearDiagnostics\"/>\n"
 "    <method name=\"ndbSignalConnected\">\n"
 "      <arg direction=\"out\" type=\"b\"/>\n"
 "      <arg direction=\"in\" type=\"s\" name=\"signalName\"/>\n"
@@ -267,6 +271,8 @@ public Q_SLOTS: // METHODS
     void pwrReboot();
     void pwrShutdown();
     void pwrSleep();
+    void sbfClearDiagnostics();
+    QString sbfDiagnostics();
     void wfmConnectWireless();
     void wfmConnectWirelessSilently();
     void wfmSetAirplaneMode(const QString &action);

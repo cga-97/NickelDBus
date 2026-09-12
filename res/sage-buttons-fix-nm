@@ -1,0 +1,2 @@
+menu_item :reader :Guardar diagnostico de botones :cmd_spawn :quiet:/usr/bin/sage-buttons-report
+menu_item :main :Guardar diagnostico de botones :cmd_spawn :quiet:/usr/bin/sage-buttons-report

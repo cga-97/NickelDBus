@@ -348,6 +348,18 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("pwrSleep"), argumentList);
     }
 
+    inline QDBusPendingReply<> sbfClearDiagnostics()
+    {
+        QList<QVariant> argumentList;
+        return asyncCallWithArgumentList(QLatin1String("sbfClearDiagnostics"), argumentList);
+    }
+
+    inline QDBusPendingReply<QString> sbfDiagnostics()
+    {
+        QList<QVariant> argumentList;
+        return asyncCallWithArgumentList(QLatin1String("sbfDiagnostics"), argumentList);
+    }
+
     inline QDBusPendingReply<> wfmConnectWireless()
     {
         QList<QVariant> argumentList;
