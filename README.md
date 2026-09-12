@@ -65,3 +65,4 @@ safe fix.
 Only install the ARM `KoboRoot.tgz` produced by the NickelTC GitHub Actions
 workflow. A host build is suitable for compilation checks only and will not run
 on a Kobo.
+<!-- trigger-ci -->
