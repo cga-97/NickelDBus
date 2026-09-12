@@ -61,3 +61,7 @@ The diagnostic build is intentionally not a button workaround yet. Its purpose
 is to determine whether the first button press after idle is lost in the Linux
 input layer, between evdev and Qt, or inside Nickel before selecting the minimum
 safe fix.
+
+Only install the ARM `KoboRoot.tgz` produced by the NickelTC GitHub Actions
+workflow. A host build is suitable for compilation checks only and will not run
+on a Kobo.
