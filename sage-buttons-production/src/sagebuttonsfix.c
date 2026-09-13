@@ -68,17 +68,13 @@ static struct nh_info SageButtonsFixInfo = {
     .uninstall_xflag = sage_buttons_install_file,
 };
 
-static struct nh_hook SageButtonsFixHook[] = {
-    {0},
-};
-
-static struct nh_dlsym SageButtonsFixDlsym[] = {
-    {0},
-};
-
-NickelHook(
+// Use a plain file-scope initializer instead of NickelHook()'s compound
+// literal. Older NickelTC ARM GCC versions reject that compound literal as a
+// non-constant initializer for an object with static storage duration.
+__attribute__((visibility("default")))
+struct nh NickelHook = {
     .init  = sage_buttons_init,
     .info  = &SageButtonsFixInfo,
-    .hook  = SageButtonsFixHook,
-    .dlsym = SageButtonsFixDlsym,
-)
+    .hook  = NULL,
+    .dlsym = NULL,
+};
