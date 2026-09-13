@@ -16,4 +16,6 @@ override GITIGNORE += *.o *.moc *.moc.o KoboRoot.tgz res/sagebuttonsfix
 uninstall-file:
 	printf '%s\n' "$(VERSION)" > $(UNINSTALL_FILE)
 
+all: uninstall-file
+
 include ../NickelHook/NickelHook.mk
