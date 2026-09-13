@@ -14,6 +14,7 @@ override GITIGNORE += *.o *.moc *.moc.o KoboRoot.tgz res/sagebuttonsfix
 .PHONY: uninstall-file
 
 uninstall-file:
+	mkdir -p "$(dir $(UNINSTALL_FILE))"
 	printf '%s\n' "$(VERSION)" > $(UNINSTALL_FILE)
 
 all: uninstall-file
