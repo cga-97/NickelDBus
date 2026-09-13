@@ -5,13 +5,17 @@
 #include <QList>
 #include <QObject>
 #include <QString>
-#include <QStringList>
 
-class QEvent;
 class QSocketNotifier;
 
 namespace NDB {
 
+// Keeps the Sage gpio-keys evdev device open and drains its private event queue.
+//
+// The diagnostic build showed that simply keeping this read-only descriptor
+// open is enough to avoid the first page-button press being lost after idle on
+// the validated Sage firmware. There is intentionally no polling, event filter,
+// input injection, timer, or continuous storage I/O here.
 class SageButtonMonitor : public QObject {
     Q_OBJECT
 
@@ -23,12 +27,11 @@ public:
     QString diagnostics() const;
 
 public Q_SLOTS:
+    // Kept for compatibility with the diagnostic D-Bus surface. They no longer
+    // collect per-page/per-view data, so normal reading has no string/log churn.
     void clearDiagnostics();
     void recordPageChanged(int pageNum);
     void recordViewChanged(QString const& viewName);
-
-protected:
-    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private Q_SLOTS:
     void readInputEvents(int fd);
@@ -41,15 +44,13 @@ private:
         QSocketNotifier *notifier;
     };
 
-    void appendEvent(QString const& event);
     InputDevice *deviceForFd(int fd);
-    QString objectDescription(QObject *object) const;
 
     QList<InputDevice> inputDevices;
-    QStringList recentEvents;
-    QStringList startupNotes;
     QElapsedTimer elapsed;
-    bool started;
+    quint64 keyEventsDrained = 0;
+    quint64 readErrors = 0;
+    bool started = false;
 };
 
 } // namespace NDB
