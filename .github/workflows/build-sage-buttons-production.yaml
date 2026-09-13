@@ -1,0 +1,23 @@
+name: Build SageButtonsFix production candidate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build_sage_buttons:
+    name: sage-buttons-fix
+    runs-on: ubuntu-latest
+    container: ghcr.io/pgaskin/nickeltc:1.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Build ARM package
+        run: make -C sage-buttons-production clean all koboroot
+      - name: Upload KoboRoot
+        uses: actions/upload-artifact@v4
+        with:
+          name: SageButtonsFix
+          path: sage-buttons-production/KoboRoot.tgz
