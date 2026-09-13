@@ -47,10 +47,13 @@ Qt key events received by Nickel, ReadingView page changes, and view changes.
 It does not inject input, change power management, or write continuously to
 `/mnt/onboard`. The current validation target is Kobo Sage firmware 4.38.23552.
 
-The monitor keeps read-only file descriptors open for the input devices. That
-is required to observe evdev, but it may also change device power behaviour. If
-the idle-button failure disappears with this build, treat that result as useful
-evidence rather than proof that the underlying fault is fixed.
+The monitor identifies evdev devices by name and keeps a read-only file
+descriptor open only for the device whose name contains `gpio-keys`. Other
+devices are opened briefly to read their name and then closed. Keeping the
+button descriptor open is required to observe evdev, but it may also change
+device power behaviour. If the idle-button failure disappears with this build,
+treat that result as useful evidence rather than proof that the underlying
+fault is fixed.
 
 After reproducing the issue, use the NickelMenu item **Guardar diagnostico de
 botones**. It writes the current snapshot to
@@ -65,4 +68,3 @@ safe fix.
 Only install the ARM `KoboRoot.tgz` produced by the NickelTC GitHub Actions
 workflow. A host build is suitable for compilation checks only and will not run
 on a Kobo.
-<!-- trigger-ci -->

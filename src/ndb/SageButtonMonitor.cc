@@ -36,6 +36,10 @@ QString eventTypeName(QEvent::Type type) {
     }
 }
 
+bool isButtonDevice(QString const& name) {
+    return name.contains(QStringLiteral("gpio-keys"), Qt::CaseInsensitive);
+}
+
 } // namespace
 
 namespace NDB {
@@ -93,6 +97,12 @@ bool SageButtonMonitor::start() {
             name = QString::fromLocal8Bit(deviceName);
         }
 
+        if (!isButtonDevice(name)) {
+            startupNotes.append(QStringLiteral("Ignoring %1 (%2)").arg(path, name));
+            close(fd);
+            continue;
+        }
+
         QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
         if (!QObject::connect(notifier, SIGNAL(activated(int)), this, SLOT(readInputEvents(int)))) {
             startupNotes.append(QStringLiteral("Unable to watch %1 (%2)").arg(path, name));
@@ -104,6 +114,10 @@ bool SageButtonMonitor::start() {
         InputDevice device = {fd, path, name, notifier};
         inputDevices.append(device);
         startupNotes.append(QStringLiteral("Watching %1 (%2)").arg(path, name));
+    }
+
+    if (inputDevices.isEmpty()) {
+        startupNotes.append(QStringLiteral("No gpio-keys evdev device found"));
     }
 
     appendEvent(QStringLiteral("monitor-start devices=%1").arg(inputDevices.size()));
